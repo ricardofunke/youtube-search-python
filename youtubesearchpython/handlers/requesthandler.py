@@ -39,7 +39,7 @@ class RequestHandler(ComponentHandler):
             pass
         else:
             #request.set_proxy(urlparse(http_proxy).netloc, "http")
-            proxy_support = ProxyHandler({'http': proxy_host})
+            proxy_support = ProxyHandler({'http': urlparse(http_proxy).netloc})
             opener = build_opener(proxy_support)
             install_opener(opener)
 
