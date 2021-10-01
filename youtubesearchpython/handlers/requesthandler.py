@@ -1,5 +1,5 @@
 from os import environ
-from urllib.request import Request, urlopen
+from urllib.request import Request, urlopen, ProxyHandler, build_opener, install_opener
 from urllib.parse import urlencode, urlparse
 import json
 import copy
@@ -32,12 +32,17 @@ class RequestHandler(ComponentHandler):
                 'User-Agent': userAgent,
             }
         )
+
         try:
             http_proxy = environ["HTTP_PROXY"]
         except KeyError:
             pass
         else:
-            request.set_proxy(urlparse(http_proxy).netloc, "http")
+            #request.set_proxy(urlparse(http_proxy).netloc, "http")
+            proxy_support = ProxyHandler({'http': proxy_host})
+            opener = build_opener(proxy_support)
+            install_opener(opener)
+
         try:
             self.response = urlopen(request, timeout=self.timeout).read().decode('utf_8')
         except:
